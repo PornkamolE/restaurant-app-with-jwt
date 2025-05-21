@@ -36,7 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return path.startsWith("/login")
                 || path.startsWith("/register")
                 || path.startsWith("/order")
-                || path.startsWith("/api/auth") // ถ้าคุณใช้ path นี้สำหรับ login แบบ JWT
+                || path.startsWith("/api/auth") //ใช้ path นี้สำหรับ login แบบ JWT
+                || path.startsWith("/customer/status")      
+                || path.startsWith("/station/complete")
                 || path.equals("/login-success")
                 || path.equals("/unauthorized")
                 || path.endsWith(".html");
