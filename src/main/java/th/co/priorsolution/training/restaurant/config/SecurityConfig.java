@@ -66,7 +66,8 @@ public class SecurityConfig {
                                 "/order", "/order/**",
                                 "/foodOrder.html", "/order-summary.html", "/order-success.html",
                                 "/login.html", "/register", "/api/auth/**",
-                                "/login-success", "/unauthorized"
+                                "/login-success", "/unauthorized", "/customer/status",
+                                "/station/complete"
                         ).permitAll()
 
                         .requestMatchers("/waitress").hasAuthority("WAITER")
