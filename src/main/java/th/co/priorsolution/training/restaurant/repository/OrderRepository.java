@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
-    Optional<OrderEntity> findTopByTableNumberOrderByCreatedAtDesc(int tableNumber);
+    Optional<OrderEntity> findTopByTableNumberOrderByCreatedAtDesc(Integer tableNumber);
 
 }
