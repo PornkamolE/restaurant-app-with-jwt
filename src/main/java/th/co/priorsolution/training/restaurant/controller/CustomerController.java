@@ -22,32 +22,41 @@ public class CustomerController {
 
     @GetMapping("/status")
     public String viewOrderStatus(@RequestParam(value = "orderId", required = false) Long orderId,
+                                  @RequestParam(value = "tableNumber", required = false) Integer tableNumber,
                                   Model model) {
+
+        Optional<OrderEntity> optionalOrder = Optional.empty();
+
         if (orderId != null) {
-            Optional<OrderEntity> optionalOrder = orderRepository.findById(orderId);
+            optionalOrder = orderRepository.findById(orderId);
+        } else if (tableNumber != null) {
+            optionalOrder = orderRepository.findTopByTableNumberOrderByCreatedAtDesc(tableNumber);
+        }
 
-            if (optionalOrder.isPresent()) {
-                OrderEntity order = optionalOrder.get();
+        if (optionalOrder.isPresent()) {
+            OrderEntity order = optionalOrder.get();
 
-                List<OrderItemDtoModel> itemDtos = order.getItems().stream().map(item -> {
-                    OrderItemDtoModel dto = new OrderItemDtoModel();
-                    dto.setMenuName(item.getMenuName());
-                    dto.setCategory(item.getCategory());
-                    dto.setStatus(item.getStatus().name());
-                    return dto;
-                }).toList();
+            List<OrderItemDtoModel> itemDtos = order.getItems().stream().map(item -> {
+                OrderItemDtoModel dto = new OrderItemDtoModel();
+                dto.setMenuName(item.getMenuName());
+                dto.setCategory(item.getCategory());
+                dto.setStatus(item.getStatus().name());
+                return dto;
+            }).toList();
 
-                model.addAttribute("orderItems", itemDtos);
-                model.addAttribute("orderId", order.getId());
-                model.addAttribute("tableNumber", order.getTableNumber());
-
+            model.addAttribute("orderItems", itemDtos);
+            model.addAttribute("orderId", order.getId());
+            model.addAttribute("tableNumber", order.getTableNumber());
+        } else {
+            model.addAttribute("notFound", true);
+            if (orderId != null) {
+                model.addAttribute("orderId", orderId);
             } else {
-                // ✅ สั่ง alert ให้หน้า HTML รู้ว่าไม่เจอ order
-                model.addAttribute("notFound", true);
-                model.addAttribute("orderId", orderId); // ยังส่งไปให้แสดงเลขที่กรอก
+                model.addAttribute("tableNumber", tableNumber);
             }
         }
 
         return "customer-status";
     }
+
 }
